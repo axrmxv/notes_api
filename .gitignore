@@ -171,4 +171,4 @@ cython_debug/
 .pypirc
 
 # db
-notes_db
+notes_db/
