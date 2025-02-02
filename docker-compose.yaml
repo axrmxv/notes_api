@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+  notes_api:
+    build: .
+    container_name: notes_api
+    restart: unless-stopped
+    command: bash -c "uvicorn app.main:app --host ${NOTES_HOST} --port ${NOTES_PORT}"
+    ports:
+      - "8050:8050"
+    env_file:
+      - .env
+    networks:
+      - notes-network
+
+
+networks:
+  notes-network:
+    name: notes-network
