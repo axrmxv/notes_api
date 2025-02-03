@@ -13,7 +13,7 @@ from app.db.session import get_db
 from app.db.models import User
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
 
 
 def get_password_hash(password: str) -> str:
@@ -34,6 +34,14 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
         )
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+
+
+def decode_access_token(token: str):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        return payload
+    except InvalidTokenError:
+        raise HTTPException(status_code=401, detail="Invalid token")
 
 
 async def get_current_user(
@@ -64,7 +72,7 @@ def require_role(required_role: str):
         if user.role != required_role:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
-                detail="Not enough permissions",
+                detail="Access denied",
             )
         return user
     return role_checker

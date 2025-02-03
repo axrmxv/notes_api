@@ -5,7 +5,13 @@ services:
     build: .
     container_name: notes_api
     restart: unless-stopped
-    command: bash -c "uvicorn app.main:app --host ${NOTES_HOST} --port ${NOTES_PORT}"
+    command: >
+      bash -c "
+      alembic init migration &&
+      alembic revision --autogenerate -m "init migration" &&
+      alembic upgrade head &&
+      uvicorn app.main:app --host ${NOTES_HOST} --port ${NOTES_PORT}
+      "
     ports:
       - "8050:8050"
     env_file:

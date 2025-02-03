@@ -11,6 +11,10 @@ class UserRole(str, Enum):
     admin = "admin"
 
 
+class UserAuth(UserBase):
+    password: str
+
+
 class UserCreate(UserBase):
     password: str
     role: UserRole = UserRole.user
@@ -20,5 +24,5 @@ class UserResponse(UserBase):
     id: int
     role: str
 
-    class Config:
+    class ConfigDict:
         from_attributes = True

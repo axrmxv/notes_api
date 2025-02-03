@@ -17,8 +17,8 @@ class NoteUpdate(BaseModel):
 
 class NoteResponse(NoteBase):
     id: int
-    owner_id: int
+    user_id: int
     is_deleted: bool
 
-    class Config:
+    class ConfigDict:
         from_attributes = True

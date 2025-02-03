@@ -1,21 +1,17 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI
 from app.api.v1.endpoints import users, notes, auth
-from fastapi.security import OAuth2PasswordBearer
+from app.middleware.log_middleware import LoggingMiddleware
 
 
 app = FastAPI(title="Notes API")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+app.add_middleware(LoggingMiddleware)
 
-app.include_router(users.router, prefix="/api/v1/users")
-app.include_router(notes.router, prefix="/api/v1/notes")
-app.include_router(auth.router, prefix="/api/v1/auth")
+
+app.include_router(users.router, prefix="/admin", tags=["Admin"])
+app.include_router(notes.router, prefix="/api/v1/notes", tags=["Note"])
+app.include_router(auth.router, tags=["Auth"])
 
 
 @app.get("/")
 async def main():
     return {"msg": "Welcome to Notes API"}
-
-
-@app.get("/items/")
-async def read_items(token: str = Depends(oauth2_scheme)):
-    return {"token": token}
