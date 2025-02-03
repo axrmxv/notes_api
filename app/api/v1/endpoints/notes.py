@@ -60,7 +60,7 @@ async def create_note(
 async def get_user_notes(
     user: User = Depends(require_role("user")),
     note_service: NoteService = Depends(get_note_service)
-) -> List[NoteResponse]:
+):
     """
     Получение списка заметок текущего пользователя.
 
@@ -81,7 +81,7 @@ async def get_note_by_id(
     note_id: int,
     user: User = Depends(require_role("user")),
     note_service: NoteService = Depends(get_note_service)
-) -> NoteResponse:
+):
     """
     Получение конкретной заметки по ID.
 
@@ -104,7 +104,7 @@ async def update_note(
     note_data: NoteUpdate,
     user: User = Depends(require_role("user")),
     note_service: NoteService = Depends(get_note_service)
-) -> NoteResponse:
+):
     """
     Обновление существующей заметки.
 
@@ -139,8 +139,8 @@ async def delete_note(
     Возвращает:
         dict: Сообщение об успешном удалении заметки.
     """
-    await note_service.delete_note(note_id, user)
-    return {"message": "Заметка удалена"}
+    result = await note_service.delete_note(note_id, user)
+    return result
 
 
 # Административные эндпоинты
@@ -151,7 +151,7 @@ async def delete_note(
 )
 async def get_all_notes(
     note_service: NoteService = Depends(get_note_service)
-) -> List[NoteResponse]:
+):
     """
     Получение всех заметок (для администраторов).
 
@@ -170,7 +170,7 @@ async def get_user_notes_admin(
     user_id: int,
     _: User = Depends(require_role("admin")),
     note_service: NoteService = Depends(get_note_service)
-) -> List[NoteResponse]:
+):
     """
     Получение заметок пользователя (для администратора).
 
@@ -201,5 +201,5 @@ async def restore_note(
     Возвращает:
         dict: Сообщение о восстановлении заметки.
     """
-    await note_service.restore_note(note_id)
-    return {"message": "Заметка востановлена"}
+    result = await note_service.restore_note(note_id)
+    return result

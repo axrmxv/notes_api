@@ -3,11 +3,11 @@ from sqlalchemy.future import select
 from fastapi import HTTPException, status
 
 from app.db.models import Note, User
-from app.schemas.note import NoteCreate, NoteUpdate, NoteResponse
+from app.schemas.note import NoteCreate, NoteUpdate
 from app.core.logger import get_logger
 from app.core.config import LOG_FILE
 
-from typing import List
+from typing import Sequence, Dict
 
 
 logger = get_logger("app.service.note", log_file=LOG_FILE)
@@ -60,7 +60,7 @@ class NoteService:
         logger.info(f"User '{user.username}' created note ID {note.id}")
         return note
 
-    async def get_user_notes(self, user: User) -> List[NoteResponse]:
+    async def get_user_notes(self, user: User) -> Sequence[Note]:
         """
         Получение всех заметок текущего пользователя.
 
@@ -80,7 +80,7 @@ class NoteService:
         logger.info(f"User '{user.username}' retrieved {len(notes)} notes")
         return notes
 
-    async def get_note_by_id(self, note_id: int, user: User) -> NoteResponse:
+    async def get_note_by_id(self, note_id: int, user: User) -> Note:
         """
         Получение заметки по ее ID.
 
@@ -113,7 +113,7 @@ class NoteService:
 
     async def update_note(
         self, note_id: int, note_data: NoteUpdate, user: User
-    ) -> NoteResponse:
+    ) -> Note:
         """
         Обновление заметки.
 
@@ -157,7 +157,7 @@ class NoteService:
             )
         return note
 
-    async def delete_note(self, note_id: int, user: User) -> None:
+    async def delete_note(self, note_id: int, user: User) -> Dict:
         """
         Удаление (мягкое) заметки по ID.
 
@@ -191,9 +191,10 @@ class NoteService:
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Internal server error"
             )
+        return {"message": f"Заметка ID {note.id} удалена"}
 
     # Методы для административных действий можно добавить аналогичным образом:
-    async def get_all_notes(self) -> List[NoteResponse]:
+    async def get_all_notes(self) -> Sequence[Note]:
         """
         Получение всех заметок (для администратора).
 
@@ -207,7 +208,7 @@ class NoteService:
 
     async def get_user_notes_admin(
         self, user_id: int
-    ) -> List[NoteResponse]:
+    ) -> Sequence[Note]:
         """
         Получение заметок пользователя (для администратора).
 
@@ -224,7 +225,7 @@ class NoteService:
         notes = result.scalars().all()
         return notes
 
-    async def restore_note(self, note_id: int) -> None:
+    async def restore_note(self, note_id: int) -> Dict:
         """
         Восстановление удаленной заметки.
 
@@ -255,3 +256,4 @@ class NoteService:
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Internal server error"
             )
+        return {"message": f"Заметка ID {note.id} востановлена"}
