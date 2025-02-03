@@ -17,6 +17,7 @@ git clone https://github.com/axrmxv/notes_api.git
 ```
 2. **Запустите проект через Docker Compose**
 ```bash
+docker network create notes-network
 docker-compose up -d
 ```
 3. **Приложение будет доступно по адресу:**
