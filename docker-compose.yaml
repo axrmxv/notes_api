@@ -1,21 +1,32 @@
 version: "3.8"
 
 services:
+  notes_db:
+    image: postgres:15
+    container_name: notes_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: notes_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+    networks:
+      - notes-network
+
   notes_api:
     build: .
     container_name: notes_api
     restart: unless-stopped
-    command: >
-      bash -c "
-      alembic init migration &&
-      alembic revision --autogenerate -m "init migration" &&
-      alembic upgrade head &&
-      uvicorn app.main:app --host ${NOTES_HOST} --port ${NOTES_PORT}
-      "
+    command: bash -c "uvicorn app.main:app --host ${NOTES_HOST} --port ${NOTES_PORT}"
     ports:
       - "8050:8050"
     env_file:
       - .env
+    depends_on:
+      - notes_db
     networks:
       - notes-network
 
@@ -23,3 +34,8 @@ services:
 networks:
   notes-network:
     name: notes-network
+    external: true
+
+
+volumes:
+  postgres_data:
