@@ -31,7 +31,7 @@ class NoteService:
 
     async def create_note(
         self, note_data: NoteCreate, user: User
-    ) -> NoteResponse:
+    ) -> Note:
         """
         Создание новой заметки.
 
@@ -58,7 +58,7 @@ class NoteService:
                 detail="Internal server error"
             )
         logger.info(f"User '{user.username}' created note ID {note.id}")
-        return NoteResponse.model_validate(note)
+        return note
 
     async def get_user_notes(self, user: User) -> List[NoteResponse]:
         """
@@ -78,7 +78,7 @@ class NoteService:
         )
         notes = result.scalars().all()
         logger.info(f"User '{user.username}' retrieved {len(notes)} notes")
-        return [NoteResponse.model_validate(note) for note in notes]
+        return notes
 
     async def get_note_by_id(self, note_id: int, user: User) -> NoteResponse:
         """
@@ -109,7 +109,7 @@ class NoteService:
                 detail="Note not found"
             )
         logger.info(f"User '{user.username}' retrieved {note.id} note")
-        return NoteResponse.model_validate(note)
+        return note
 
     async def update_note(
         self, note_id: int, note_data: NoteUpdate, user: User
@@ -155,7 +155,7 @@ class NoteService:
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Internal server error"
             )
-        return NoteResponse.model_validate(note)
+        return note
 
     async def delete_note(self, note_id: int, user: User) -> None:
         """
@@ -203,7 +203,7 @@ class NoteService:
         """
         result = await self.db.execute(select(Note))
         notes = result.scalars().all()
-        return [NoteResponse.model_validate(note) for note in notes]
+        return notes
 
     async def get_user_notes_admin(
         self, user_id: int
@@ -222,7 +222,7 @@ class NoteService:
             select(Note).where(Note.user_id == user_id)
         )
         notes = result.scalars().all()
-        return [NoteResponse.model_validate(note) for note in notes]
+        return notes
 
     async def restore_note(self, note_id: int) -> None:
         """

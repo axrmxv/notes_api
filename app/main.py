@@ -8,7 +8,7 @@ app.add_middleware(LoggingMiddleware)
 
 
 app.include_router(users.router, prefix="/admin", tags=["Admin"])
-app.include_router(notes.router, prefix="/api/v1/notes", tags=["Note"])
+app.include_router(notes.router, prefix="/api/v1", tags=["Note"])
 app.include_router(auth.router, tags=["Auth"])
 
 

@@ -36,7 +36,7 @@ async def create_note(
     note_data: NoteCreate,
     user: User = Depends(get_current_user),
     note_service: NoteService = Depends(get_note_service)
-) -> NoteResponse:
+):
     """
     Создание новой заметки.
 
