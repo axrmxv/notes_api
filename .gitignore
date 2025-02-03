@@ -173,5 +173,5 @@ cython_debug/
 # db
 # notes_db/
 postgres_data
-.db
+test.db
 migration
