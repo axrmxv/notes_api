@@ -2,10 +2,20 @@ import logging
 
 
 def get_logger(
-    name: str = "app",
-    log_file: str = "app.log",
-    level: int = logging.INFO
+    name: str = "app", log_file: str = "app.log", level: int = logging.INFO
 ) -> logging.Logger:
+    """
+    Создает и возвращает настроенный логгер.
+
+    Аргументы:
+        name (str): Имя логгера. По умолчанию 'app'.
+        log_file (str): Путь к файлу для записи логов. По умолчанию 'app.log'.
+        level (int): Уровень логирования (например, logging.INFO).
+        По умолчанию INFO.
+
+    Возвращает:
+        logging.Logger: Настроенный экземпляр логгера.
+    """
     logger = logging.getLogger(name)
     logger.setLevel(level)
 
