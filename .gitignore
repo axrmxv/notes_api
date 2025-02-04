@@ -174,8 +174,5 @@ cython_debug/
 .pypirc
 
 # db
-notes_db/
 postgres_data
 test.db
-migration
-alembic.ini
