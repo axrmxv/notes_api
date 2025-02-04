@@ -13,7 +13,7 @@ API для управления заметками с использование
 ### Шаги
 1. **Клонируйте репозиторий**
 ```bash
-git clone https://github.com/username/notes_api.git
+git clone https://github.com/axrmxv/notes_api
 ```
 2. **Запустите базу данных**
 ```bash
